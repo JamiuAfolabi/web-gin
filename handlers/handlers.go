@@ -20,7 +20,7 @@ type Repository struct {
 func NewRepo(app *config.AppConfig, db *databasedriver.DB) *Repository {
 	return &Repository{
 		App: app,
-		DB:  dbrepo.NewPostgresRepo(db.SQL, app),
+		DB:  dbrepo.NewDBRepo(db.SQL, app),
 	}
 }
 
@@ -28,12 +28,96 @@ func NewHandlers(r *Repository) {
 	Repo = r
 }
 
-func (m *Repository) HelloWorld(context *gin.Context) {
-	products, err := m.DB.GetAllRows()
+func (m *Repository) GetAllProduct(context *gin.Context) {
+	products, err := m.DB.GetAllProductInformation()
 	// m.DB.GetAllRows()
 
 	if err != nil {
 		context.JSON(500, gin.H{"error": "Unable to fetch products"})
+		return
+	}
+
+	context.IndentedJSON(200, products)
+}
+
+func (m *Repository) GetTotalSalesByCategory(context *gin.Context) {
+	products, err := m.DB.TotalSalesByCategory()
+	// m.DB.GetAllRows()
+
+	if err != nil {
+		context.JSON(500, gin.H{"error": "Unable to fetch total sales"})
+		return
+	}
+
+	context.IndentedJSON(200, products)
+}
+
+func (m *Repository) GetTotalRevenueByMonth(context *gin.Context) {
+	products, err := m.DB.TotalSalesByCategory()
+	// m.DB.GetAllRows()
+
+	if err != nil {
+		context.JSON(500, gin.H{"error": "Unable to fetch total sales"})
+		return
+	}
+
+	context.IndentedJSON(200, products)
+}
+
+func (m *Repository) GetTop5Products(context *gin.Context) {
+	products, err := m.DB.Top5PerformingProduct()
+	// m.DB.GetAllRows()
+
+	if err != nil {
+		context.JSON(500, gin.H{"error": "Unable to fetch total sales"})
+		return
+	}
+
+	context.IndentedJSON(200, products)
+}
+
+func (m *Repository) GetSalesPerformance(context *gin.Context) {
+	products, err := m.DB.SalesPerformanceMetric()
+	// m.DB.GetAllRows()
+
+	if err != nil {
+		context.JSON(500, gin.H{"error": "Unable to fetch total sales"})
+		return
+	}
+
+	context.IndentedJSON(200, products)
+}
+
+func (m *Repository) GetSalesDistributionByCategory(context *gin.Context) {
+	products, err := m.DB.SalesDistributionByCategory()
+	// m.DB.GetAllRows()
+
+	if err != nil {
+		context.JSON(500, gin.H{"error": "Unable to fetch total sales"})
+		return
+	}
+
+	context.IndentedJSON(200, products)
+}
+
+func (m *Repository) GetProductPerformanceByCat(context *gin.Context) {
+	products, err := m.DB.ProductPerformanceByCategory()
+	// m.DB.GetAllRows()
+
+	if err != nil {
+		context.JSON(500, gin.H{"error": "Unable to fetch total sales"})
+		return
+	}
+
+	context.IndentedJSON(200, products)
+}
+
+func (m *Repository) GetTop20PurchasePatter(context *gin.Context) {
+	products, err := m.DB.Top20CustomerPurchase()
+	// m.DB.GetAllRows()
+
+	if err != nil {
+		context.JSON(500, gin.H{"error": "Unable to fetch total sales"})
 		return
 	}
 

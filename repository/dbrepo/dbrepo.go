@@ -6,13 +6,15 @@ import (
 	"jamiuafolabi/web-service-gin/repository"
 )
 
-type postgresDBRepo struct {
+// Holds the database connection and application configuration needed throughout the application
+type DBRepo struct {
 	DB  *sql.DB
 	App *config.AppConfig
 }
 
-func NewPostgresRepo(conn *sql.DB, appconfig *config.AppConfig) repository.DatabaseRepo {
-	return &postgresDBRepo{
+// creates a new Database repository instance
+func NewDBRepo(conn *sql.DB, appconfig *config.AppConfig) repository.DatabaseRepo {
+	return &DBRepo{
 		App: appconfig,
 		DB:  conn,
 	}

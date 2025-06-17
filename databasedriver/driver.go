@@ -10,12 +10,15 @@ import (
 	_ "github.com/marcboeker/go-duckdb"
 )
 
+// Database interface to allow easy switching
 type DB struct {
 	SQL *sql.DB
 }
 
+// Database connection that can accessed globally
 var DbConn = &DB{}
 
+// Iniatiates database connection
 func ConnectSQL(connstring string, db_parameter string) {
 	db, err := NewDatabase(connstring, db_parameter)
 
@@ -29,6 +32,7 @@ func ConnectSQL(connstring string, db_parameter string) {
 
 }
 
+// creates a new database connection and verifies connectivity
 func NewDatabase(connstring string, db_parameter string) (*sql.DB, error) {
 	log.Println(db_parameter)
 
@@ -46,6 +50,7 @@ func NewDatabase(connstring string, db_parameter string) (*sql.DB, error) {
 
 }
 
+// reads SQL from a file and returns it as bytes
 func ReadSqlFromFile(filepath string) ([]byte, error) {
 	sqlBytes, err := os.ReadFile(filepath)
 	if err != nil {
@@ -56,6 +61,7 @@ func ReadSqlFromFile(filepath string) ([]byte, error) {
 
 }
 
+// reads and executes SQL statements from a file
 func ExecuteByteSqlFile(db *sql.DB, filename string) {
 	sqlBytes, _ := ReadSqlFromFile(filename)
 	_, err := db.Exec(string(sqlBytes))

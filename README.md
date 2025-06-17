@@ -1,122 +1,187 @@
-# Sales Analytics Technical Test
+# Sales Analytics Web Service
 
-## Overview
-This technical test evaluates your ability to design and implement a sales analytics system using modern technologies and architectural patterns. The test focuses on your understanding of data processing, API design, and domain-driven architecture.
+A high-performance REST API built with Go and Gin framework that provides comprehensive sales analytics and business intelligence endpoints. The service supports both PostgreSQL and DuckDB databases.
 
-## Technical Requirements
 
-### Core Technologies
-- Go (Golang)
-- DuckDB for data processing and analytics
-- API Framework (Choose one):
-  - Gin
-  - Echo
-  - gRPC
+## Setup Instructions
 
-### Architecture Requirements
-1. **Domain-Driven Design**
-   - Implement clean architecture principles
-   - Separate business logic from infrastructure concerns
-   - Use proper domain modeling for sales and analytics
+### Prerequisites
 
-2. **Data Layer**
-   - Create a mock database of sales data
-   - Implement DuckDB integration for analytical queries
-   - Design appropriate data models and schemas
+- Go 1.21 or higher
+- DuckDb PostgreSQL (optional)
+- Git
 
-3. **API Layer**
-   - Implement RESTful endpoints or gRPC services
-   - Create separate endpoints for Finance and Sales teams
-   - Include proper error handling and validation
+### Get Gin from Repo
+```bash
+    go get -u github.com/gin-gonic/gin
+```
 
-## Functional Requirements
+### Get Postgres from Repo (Optional)
+```bash
+    go get -u github.com/lib/pq
+```
 
-### Data Requirements
-Create a mock sales database with the following attributes:
-- Product information (ID, name, category, price)
-- Sales transactions (ID, product ID, quantity, date, customer info)
-- Category information
-- Any additional relevant fields you deem necessary
+## Get DuckDb from Repo
 
-### API Endpoints
-Implement the following analytical endpoints:
+### Installation
 
-#### For Finance Team
-1. Total sales by category
-2. Revenue trends over time
-3. Average order value by category
-4. Top performing products
-5. Sales performance metrics
+1. **Clone the repository**
+   ```bash
+   git clone git@github.com:JamiuAfolabi/web-gin.git
+   cd web-service-gin
+   ```
 
-#### For Sales Team
-1. Category-wise sales distribution
-2. Product performance within categories
-3. Sales trends by time period
-4. Customer purchase patterns
-5. Category growth metrics
+2. **Install dependencies**
+   ```bash
+   go mod tidy
+   ```
 
-## Technical Evaluation Criteria
+3. **Database Setup**
 
-1. **Code Quality**
-   - Clean, maintainable code
-   - Proper error handling
-   - Comprehensive documentation
-   - Unit tests
+   **Option A: DuckDB (Default)**
+   - No additional setup required
+   - Database file `sales_data.duckdb` will be created automatically
 
-2. **Architecture**
-   - Proper separation of concerns
-   - Domain-driven design implementation
-   - Scalable and maintainable structure
+   **Option B: PostgreSQL**
+   - Install PostgreSQL
+   - Create a database named `postgres`
+   - Update connection details in `main.go`:
+     ```go
+     dbConfig.Host = "your-host"
+     dbConfig.Port = 5432
+     dbConfig.Username = "your-username"
+     dbConfig.Password = "your-password"
+     ```
 
-3. **Performance**
-   - Efficient DuckDB queries
-   - Optimized data processing
-   - Response time considerations
+     - Create Migration Using Soda
+     ```soda migrate```
 
-4. **API Design**
-   - RESTful/gRPC best practices
-   - Clear endpoint documentation
-   - Proper request/response handling
 
-## Submission Requirements
+4. **Run the application**
+   ```bash
+   go run *.go
+   ```
 
-1. Source code in a Git repository
-2. README with:
-   - Setup instructions
-   - API documentation
-   - Architecture overview
-   - How to run the application
-3. A brief write-up (max 500 words) covering:
-   - Design decisions and trade-offs
-   - Potential improvements
-   - Scalability considerations
-   - Security considerations
+The server will start on `http://localhost:8080`
 
-## Time Frame
-- Recommended completion time: 3 days
-- Please indicate if you need more time
+## API Documentation
 
-## Getting Started
+### Base URL
+```
+http://localhost:8080
+```
 
-1. Fork this repository
-2. Set up your development environment
-3. Implement the requirements
-4. Document your solution
-5. Submit your repository link
+### Endpoints
 
-## Notes
-- Focus on code quality over feature completeness
-- Document any assumptions made
-- Include any relevant diagrams
-- Consider edge cases and error scenarios
+#### Basic Data
+- **GET** `/getproducts`
+  - Returns all products in the catalog
+  - Response: `[{id, name, category_id, price}]`
 
-## Evaluation
-Your submission will be evaluated based on:
-- Code quality and organization
-- Architecture implementation
-- API design and documentation
-- Performance considerations
-- Documentation quality
-- Improvement suggestions
+#### Financial Analytics
+- **GET** `/finance/totalsalesbycat`
+  - Total sales aggregated by category
+  - Response: `[{category, total_sales}]`
 
-Good luck with the test! We look forward to reviewing your solution. 
+- **GET** `/finance/revenuebymonth`
+  - Monthly revenue trends over time
+  - Response: `[{month, revenue}]`
+
+- **GET** `/finance/performingproducts`
+  - Top 5 revenue-generating products
+  - Response: `[{product, total_revenue}]`
+
+- **GET** `/finance/salesperformance`
+  - Overall sales KPIs and metrics
+  - Response: `[{total_orders, total_items_sold, total_revenue, avg_order_value}]`
+
+#### Sales Analytics
+- **GET** `/sales/salesdistributionbycat`
+  - Market share distribution by category
+  - Response: `[{category, category_sales, percentage}]`
+
+- **GET** `/sales/productperformancebycat`
+  - Product performance within each category
+  - Response: `[{category, product, revenue}]`
+
+- **GET** `/sales/topcustomerpurchase`
+  - Top 20 customer purchase patterns
+  - Response: `[{name, email, orders, total_spent}]`
+
+
+
+## Architecture Overview
+
+
+```
+┌─────────────────┐    ┌─────────────────┐
+│   HTTP Handlers │────│   Repository    │
+│   (Gin Routes)  │    │   Interface     │
+└─────────────────┘    └─────────────────┘
+                              │
+                       ┌─────────────────┐
+                       │  Database Repo  │
+                       │ Implementation  │
+                       └─────────────────┘
+                              │
+                       ┌─────────────────┐
+                       │  Database Layer │
+                       │ (PostgreSQL/    │
+                       │  DuckDB)        │
+                       └─────────────────┘
+```
+
+### Key Components
+
+1. **Models Package**: Data structures and business entities
+2. **Repository Pattern**: Abstract database operations with interface
+3. **Database Driver**: Connection management and SQL execution
+4. **Generic Query Engine**: Type-safe result mapping using Go generics
+5. **Handlers**: HTTP request/response processing
+6. **Configuration**: Environment and database settings
+
+
+### Production Build
+
+1. **Build the application**
+   ```bash
+   go build -o sales-analytics .
+   ```
+
+2. **Run the binary**
+   ```bash
+   ./sales-analytics
+   ```
+## Database Schema
+
+The application uses four main tables:
+
+- **category**: Product categories (Electronics, Books, etc.)
+- **product**: Product catalog with category relationships
+- **customer**: Customer information and demographics
+- **sales_transaction**: Transaction records linking products and customers
+
+Sample data is automatically inserted on application startup for demonstration purposes.
+
+## Configuration
+
+Database configuration can be modified in `main.go`:
+
+```go
+// For DuckDB
+dbConfig.DSN = "duckdb"
+dbConfig.DBSchemaFile = "migrations/duckdbschema.sql"
+
+// For PostgreSQL  
+dbConfig.Host = "localhost"
+dbConfig.Port = 5432
+dbConfig.Dbname = "your-database"
+dbConfig.Username = "your-username"
+dbConfig.Password = "your-password"
+```
+
+## Improvements
+- Inclusion of Unit test
+- Inclusion of Page limiting 
+- Inclusion of Authentication and Authorization
+- Inclusion of API rate limiting
