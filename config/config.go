@@ -1,5 +1,6 @@
 package config
 
+// This includes the database configuration
 type DatabaseConfig struct {
 	Host         string
 	Port         int
@@ -10,5 +11,6 @@ type DatabaseConfig struct {
 	DBSchemaFile string
 }
 
+// This includes the app related configuration
 type AppConfig struct {
 }

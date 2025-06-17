@@ -28,7 +28,7 @@ type Customer struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-// SalesTransaction represents a sales record
+// SalesTransaction struct represents a sales record
 type SalesTransaction struct {
 	Id              int       `json:"id"`
 	ProductId       int       `json:"product_id"`
@@ -39,21 +39,25 @@ type SalesTransaction struct {
 	TotalAmount     float64   `json:"total_amount"`
 }
 
+// TotalSalesByCategory struct represents sales data by product category
 type TotalSalesByCategory struct {
 	Category   string  `json:"category"`
 	TotalSales float64 `json:"total_sales"`
 }
 
+// RevenueByMonth struct represents monthly revenue trends
 type RevenueByMonth struct {
 	Month   time.Time `json:"month"`
 	Revenue float64   `json:"revenue"`
 }
 
+// Top5Revenue struct represents highest-performing products by revenue struct
 type Top5Revenue struct {
 	Product      string  `json:"product"`
 	TotalRevenue float64 `json:"total_revenue"`
 }
 
+// SalesPerformanceMetrics struct represents key metrics in sales
 type SalesPerformanceMetrics struct {
 	TotalOrders    int64   `json:"total_orders"`
 	TotalItemsSold int64   `json:"total_items_sold"`
@@ -61,18 +65,22 @@ type SalesPerformanceMetrics struct {
 	AvgOrderValue  float64 `json:"avg_order_value"`
 }
 
+// CategorySalesDistribution struct represents sales distribution across categories
 type CategorySalesDistribution struct {
 	Category      string  `json:"category"`
 	CategorySales float64 `json:"category_sales"`
 	Percentage    float64 `json:"percentage"`
 }
 
+
+// ProductPerformanceByCategory represents product performance within categories
 type ProductPerformanceByCategory struct {
 	Category string  `json:"category"`
 	Product  string  `json:"product"`
 	Revenue  float64 `json:"revenue"`
 }
 
+// CustomerPurchasePattern represents customer buying behavior
 type CustomerPurchasePattern struct {
 	Name       string  `json:"name"`
 	Email      string  `json:"email"`
