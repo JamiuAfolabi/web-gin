@@ -1,0 +1,4 @@
+add_foreign_key("salestransaction", "product_id", {"productinformation": ["id"]}, {
+    "on_delete": "cascade",
+    "on_update": "cascade",
+})

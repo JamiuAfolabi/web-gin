@@ -1,0 +1,1 @@
+drop_foreign_key("salestransaction", "salestransaction_productinformation_id_fk", {"if_exists": true})

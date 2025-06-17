@@ -1,0 +1,4 @@
+database.yml
+sales_data.duckdb
+sales_data.duckdb.wal
+migrations/*.fizz

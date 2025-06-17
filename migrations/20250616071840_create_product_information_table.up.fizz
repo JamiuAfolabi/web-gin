@@ -1,0 +1,7 @@
+create_table("productinformation") {
+  t.Column("id", "string", {primary: true})
+  t.Column("name", "string", {})
+  t.Column("category", "string", {})
+  t.Column("price", "float", {})
+
+}

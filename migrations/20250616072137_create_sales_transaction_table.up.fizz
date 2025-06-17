@@ -1,0 +1,8 @@
+create_table("salestransaction") {
+  t.Column("id", "string", {primary: true})
+  t.Column("product_id", "string", {fore})
+  t.Column("quantity", "integer", {})
+  t.Column("date", "timestamp", {})
+  t.Column("customer_info", "string", {})
+
+}
